@@ -1,0 +1,10 @@
+version: "3"
+
+services: 
+   server:
+      container_name: "01"
+      image: localhost:5000/01:latest
+      restart: always
+      volumes:
+         - ./source/uploads:/server/source/uploads
+         - ./source/configs:/server/source/configs

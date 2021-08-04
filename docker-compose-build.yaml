@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+   test:
+      image: localhost:5000/01:latest
+      build:
+         context: ./
+         dockerfile: ./Dockerfile
