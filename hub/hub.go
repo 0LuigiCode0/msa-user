@@ -3,15 +3,17 @@ package hub
 import (
 	"fmt"
 	"net/http"
-	corehelper "x-msa-core/helper"
-	"x-msa-user/core/database"
-	"x-msa-user/handlers/grpc_handler"
-	"x-msa-user/handlers/grpc_handler/grpc_helper"
-	"x-msa-user/handlers/roots_handler"
-	"x-msa-user/handlers/roots_handler/roots_helper"
-	"x-msa-user/helper"
-	"x-msa-user/hub/hub_helper"
-	"x-msa-user/store/mongo/model"
+
+	"github.com/0LuigiCode0/msa-user/core/database"
+	"github.com/0LuigiCode0/msa-user/handlers/grpcHandler"
+	"github.com/0LuigiCode0/msa-user/handlers/grpcHandler/grpcHelper"
+	"github.com/0LuigiCode0/msa-user/handlers/rootsHandler"
+	"github.com/0LuigiCode0/msa-user/handlers/rootsHandler/rootsHelper"
+	"github.com/0LuigiCode0/msa-user/helper"
+	"github.com/0LuigiCode0/msa-user/hub/hubHelper"
+	"github.com/0LuigiCode0/msa-user/store/mongo/model"
+
+	coreHelper "github.com/0LuigiCode0/msa-core/helper"
 
 	"github.com/0LuigiCode0/logger"
 	"github.com/gorilla/mux"
@@ -32,14 +34,14 @@ type Hub interface {
 }
 
 type hub struct {
-	helper hub_helper.Helper
+	helper hubHelper.Helper
 	database.DB
 	router  *mux.Router
 	handler http.Handler
 	config  *helper.Config
 
-	_roots roots_helper.Handler
-	_grpc  grpc_helper.Handler
+	_roots rootsHelper.Handler
+	_grpc  grpcHelper.Handler
 }
 
 func InitHub(db database.DB, conf *helper.Config) (H Hub, err error) {
@@ -51,7 +53,7 @@ func InitHub(db database.DB, conf *helper.Config) (H Hub, err error) {
 	H = hh
 	hh.SetHandler(hh.router)
 
-	hh.helper = hub_helper.InitHelper(hh)
+	hh.helper = hubHelper.InitHelper(hh)
 
 	if err = hh.intiDefault(); err != nil {
 		logger.Log.Warningf("initializing default is failed: %v", err)
@@ -61,7 +63,7 @@ func InitHub(db database.DB, conf *helper.Config) (H Hub, err error) {
 	logger.Log.Service("initializing default")
 
 	if v, ok := conf.Handlers[_roots]; ok {
-		hh._roots, err = roots_handler.InitHandler(hh, v)
+		hh._roots, err = rootsHandler.InitHandler(hh, v)
 		if err != nil {
 			err = fmt.Errorf("handler %q not initializing: %v", _roots, err)
 			return
@@ -73,7 +75,7 @@ func InitHub(db database.DB, conf *helper.Config) (H Hub, err error) {
 	}
 
 	if v, ok := conf.Handlers[_grpc]; ok {
-		hh._grpc, err = grpc_handler.InitHandler(hh, v)
+		hh._grpc, err = grpcHandler.InitHandler(hh, v)
 		if err != nil {
 			err = fmt.Errorf("handler %q not initializing: %v", _grpc, err)
 			return
@@ -88,13 +90,13 @@ func InitHub(db database.DB, conf *helper.Config) (H Hub, err error) {
 	return
 }
 
-func (h *hub) Config() *helper.Config      { return h.config }
-func (h *hub) Helper() hub_helper.Helper   { return h.helper }
-func (h *hub) Router() *mux.Router         { return h.router }
-func (h *hub) GetHandler() http.Handler    { return h.handler }
-func (h *hub) SetHandler(hh http.Handler)  { h.handler = hh }
-func (h *hub) Roots() roots_helper.Handler { return h._roots }
-func (h *hub) Grps() grpc_helper.MSA       { return h._grpc }
+func (h *hub) Config() *helper.Config     { return h.config }
+func (h *hub) Helper() hubHelper.Helper   { return h.helper }
+func (h *hub) Router() *mux.Router        { return h.router }
+func (h *hub) GetHandler() http.Handler   { return h.handler }
+func (h *hub) SetHandler(hh http.Handler) { h.handler = hh }
+func (h *hub) Roots() rootsHelper.Handler { return h._roots }
+func (h *hub) Grps() grpcHelper.MSA       { return h._grpc }
 func (h *hub) Close() {
 	if h._grpc != nil {
 		h._grpc.Close()
@@ -104,7 +106,7 @@ func (h *hub) Close() {
 func (h *hub) intiDefault() error {
 	// Users collection create
 	if _, err := h.Mongo().Collection(string(helper.CollUsers)).Indexes().CreateMany(
-		corehelper.Ctx,
+		coreHelper.Ctx,
 		[]mongo.IndexModel{
 			{
 				Keys:    primitive.M{"login": 1},
@@ -117,7 +119,7 @@ func (h *hub) intiDefault() error {
 	logger.Log.Servicef("collection %v is created", helper.CollUsers)
 
 	for _, user := range h.Config().Admins {
-		pwd, _ := corehelper.Hash(user.Password)
+		pwd := coreHelper.Hash(user.Password, helper.Secret)
 		newUser := &model.UserModel{Login: user.Login, Password: pwd}
 		h.MongoStore().UserStore().Save(newUser)
 		if newUser.ID.IsZero() {

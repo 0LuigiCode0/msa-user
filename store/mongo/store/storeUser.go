@@ -1,9 +1,10 @@
 package store
 
 import (
-	corehelper "x-msa-core/helper"
-	"x-msa-user/helper"
-	"x-msa-user/store/mongo/model"
+	"github.com/0LuigiCode0/msa-user/helper"
+	"github.com/0LuigiCode0/msa-user/store/mongo/model"
+
+	coreHelper "github.com/0LuigiCode0/msa-core/helper"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -28,7 +29,7 @@ func InitUserStore(db *mongo.Database) UserStore {
 }
 
 func (s *userStore) Save(user *model.UserModel) error {
-	res, err := s.db.Collection(string(helper.CollUsers)).UpdateOne(corehelper.Ctx, primitive.M{
+	res, err := s.db.Collection(string(helper.CollUsers)).UpdateOne(coreHelper.Ctx, primitive.M{
 		"login": user.Login,
 	}, primitive.M{
 		"$setOnInsert": user,
@@ -42,7 +43,7 @@ func (s *userStore) Save(user *model.UserModel) error {
 }
 
 func (s *userStore) Update(user *model.UserModel) error {
-	_, err := s.db.Collection(string(helper.CollUsers)).UpdateOne(corehelper.Ctx, primitive.M{
+	_, err := s.db.Collection(string(helper.CollUsers)).UpdateOne(coreHelper.Ctx, primitive.M{
 		"_id": user.ID,
 	}, primitive.M{
 		"$set": user,
@@ -52,7 +53,7 @@ func (s *userStore) Update(user *model.UserModel) error {
 
 func (s *userStore) SelectByID(id primitive.ObjectID) (*model.UserModel, error) {
 	user := &model.UserModel{}
-	err := s.db.Collection(string(helper.CollUsers)).FindOne(corehelper.Ctx, primitive.M{
+	err := s.db.Collection(string(helper.CollUsers)).FindOne(coreHelper.Ctx, primitive.M{
 		"_id": id,
 	}).Decode(user)
 	return user, err
@@ -60,7 +61,7 @@ func (s *userStore) SelectByID(id primitive.ObjectID) (*model.UserModel, error) 
 
 func (s *userStore) SelectByLogin(login string) (*model.UserModel, error) {
 	user := &model.UserModel{}
-	err := s.db.Collection(string(helper.CollUsers)).FindOne(corehelper.Ctx, primitive.M{
+	err := s.db.Collection(string(helper.CollUsers)).FindOne(coreHelper.Ctx, primitive.M{
 		"login": login,
 	}).Decode(user)
 	return user, err

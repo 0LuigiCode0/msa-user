@@ -1,19 +1,9 @@
 package model
 
 import (
-	"time"
-	"x-msa-auth/helper"
-
-	"github.com/dgrijalva/jwt-go"
+	"github.com/0LuigiCode0/msa-auth/helper"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
-
-//UserClaims ...
-type UserClaims struct {
-	jwt.StandardClaims
-	ID   primitive.ObjectID
-	Time time.Time
-}
 
 //UserModel модель пользователя в БД
 type UserModel struct {

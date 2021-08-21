@@ -1,6 +1,6 @@
 package helper
 
-import corehelper "x-msa-core/helper"
+import coreHelper "github.com/0LuigiCode0/msa-core/helper"
 
 //Config модель конфига
 type Config struct {
@@ -27,7 +27,7 @@ type HandlerConfig struct {
 	Host     string                `json:"host"`
 	Port     int32                 `json:"port"`
 	Key      string                `json:"key"`
-	Group    corehelper.GroupsType `json:"group"`
+	Group    coreHelper.GroupsType `json:"group"`
 	User     string                `json:"user"`
 	Password string                `json:"password"`
 	IsTSL    bool                  `json:"is_tsl"`

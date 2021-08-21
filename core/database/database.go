@@ -3,10 +3,11 @@ package database
 import (
 	"fmt"
 
-	corehelper "x-msa-core/helper"
-	"x-msa-user/helper"
+	"github.com/0LuigiCode0/msa-user/helper"
 
-	mongoStore "x-msa-user/store/mongo"
+	coreHelper "github.com/0LuigiCode0/msa-core/helper"
+
+	mongoStore "github.com/0LuigiCode0/msa-user/store/mongo"
 
 	"github.com/0LuigiCode0/logger"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -60,7 +61,7 @@ func InitDB(conf *helper.Config) (DB DB, err error) {
 }
 
 func (d *db) Close() {
-	d._mongo.conn.(*mongo.Client).Disconnect(corehelper.Ctx)
+	d._mongo.conn.(*mongo.Client).Disconnect(coreHelper.Ctx)
 	logger.Log.Servicef("db %q stoped", _mongo)
 }
 
@@ -69,11 +70,11 @@ func (d *db) MongoStore() mongoStore.Store { return d._mongo.store.(mongoStore.S
 
 func connMongo(v *helper.DbConfig) (conn *mongo.Client, err error) {
 	opt := options.Client().ApplyURI(fmt.Sprintf("mongodb://%v:%v", v.Host, v.Port)).SetAuth(options.Credential{AuthMechanism: "SCRAM-SHA-256", Username: v.User, Password: v.Password})
-	conn, err = mongo.Connect(corehelper.Ctx, opt)
+	conn, err = mongo.Connect(coreHelper.Ctx, opt)
 	if err != nil {
 		return conn, fmt.Errorf("db not connected: %v", err)
 	}
-	if err = conn.Ping(corehelper.Ctx, nil); err != nil {
+	if err = conn.Ping(coreHelper.Ctx, nil); err != nil {
 		return conn, fmt.Errorf("db not pinged: %v", err)
 	}
 	return

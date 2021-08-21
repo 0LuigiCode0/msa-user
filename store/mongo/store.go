@@ -1,7 +1,7 @@
 package mongoStore
 
 import (
-	"x-msa-user/store/mongo/store"
+	"github.com/0LuigiCode0/msa-user/store/mongo/store"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )

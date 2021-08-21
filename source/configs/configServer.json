@@ -20,7 +20,7 @@
 			"type": "grpc",
 			"host": "0.0.0.0",
 			"port": 9090,
-			"key": "user-01",
+			"key": "01",
 			"is_tsl": false
 		}
 	},
@@ -34,7 +34,7 @@
 		{
 			"host": "0.0.0.0",
 			"port": 9091,
-			"key": "auth-01",
+			"key": "02",
 			"group": "auth"
 		}
 	]

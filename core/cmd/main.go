@@ -1,16 +1,17 @@
 package main
 
 import (
-	corehelper "x-msa-core/helper"
-	"x-msa-user/core"
-	"x-msa-user/helper"
+	"github.com/0LuigiCode0/msa-user/core"
+	"github.com/0LuigiCode0/msa-user/helper"
+
+	coreHelper "github.com/0LuigiCode0/msa-core/helper"
 
 	"github.com/0LuigiCode0/logger"
 )
 
 func main() {
 	conf := &helper.Config{}
-	if err := corehelper.ParseConfig(helper.ConfigDir+helper.ConfigFile, conf); err != nil {
+	if err := coreHelper.ParseConfig(helper.ConfigDir+helper.ConfigFile, conf); err != nil {
 		logger.Log.Errorf("config parse invalid: %v", err)
 		return
 	}

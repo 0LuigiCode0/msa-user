@@ -1,9 +1,10 @@
-package grpcpublic
+package grpcPublic
 
 import (
-	"x-msa-core/service/client"
-	"x-msa-core/service/server"
-	"x-msa-user/store/mongo/model"
+	"github.com/0LuigiCode0/msa-user/store/mongo/model"
+
+	"github.com/0LuigiCode0/msa-core/service/client"
+	"github.com/0LuigiCode0/msa-core/service/server"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
